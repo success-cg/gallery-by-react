@@ -9,7 +9,7 @@ npm install -g
 ### 项目构建
 
 ```
-generator-react-webpack
+yo react-webpack
 ```
 
 ### 项目启动

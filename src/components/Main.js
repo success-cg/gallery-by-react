@@ -63,26 +63,11 @@ class ImgFigure extends React.Component {
 //   }
 // })
 
-//class AppComponent extends React.Component
+class AppComponent extends React.Component {
 
-let AppComponent = React.createClass({
+// let AppComponent = React.createClass({
 
-  //Constant存储排布的可取值范围
-  Constant: {
-    centerPos: { //中心图片的位置
-      left: 0,
-      top: 0
-    },
-    hPosRange: { //水平方向的取值范围
-      leftSecX: [0, 0],
-      rightSecX: [0, 0],
-      y: [0, 0]
-    },
-    vPosRange: { //垂直方向的取值范围
-      x: [0, 0],
-      topY: [0, 0]
-    }
-  },
+
 
   /**
    * 重新布局所有图片
@@ -90,11 +75,11 @@ let AppComponent = React.createClass({
    */
   rearrange(centerIndex) {
     let imgsArrangeArr = this.state.imgsArrangeArr
-    let Constant = this.Constant;
+    let constant = this.state.constant;
 
-    let centerPos = Constant.centerPos
-    let hPosRange = Constant.hPosRange
-    let vPosRange = Constant.vPosRange
+    let centerPos = constant.centerPos
+    let hPosRange = constant.hPosRange
+    let vPosRange = constant.vPosRange
     let hPosRangeLeftSecX = hPosRange.leftSecX
     let hPosRangeRightSecX = hPosRange.rightSecX
     let hPosRangeY = hPosRange.y
@@ -150,11 +135,11 @@ let AppComponent = React.createClass({
     this.setState({
       imgsArrangeArr
     })
-  },
+  }
 
-
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       imgsArrangeArr: [
         /*{
           pos: {
@@ -162,9 +147,39 @@ let AppComponent = React.createClass({
             top: '0'
           }
         } */
-      ]
+      ],
+
+      //constant存储排布的可取值范围
+      constant: {
+        centerPos: { //中心图片的位置
+          left: 0,
+          top: 0
+        },
+        hPosRange: { //水平方向的取值范围
+          leftSecX: [0, 0],
+          rightSecX: [0, 0],
+          y: [0, 0]
+        },
+        vPosRange: { //垂直方向的取值范围
+          x: [0, 0],
+          topY: [0, 0]
+        }
+      }
     }
-  },
+  }
+
+  // getInitialState() {
+  //   return {
+  //     imgsArrangeArr: [
+  //       /*{
+  //         pos: {
+  //           left: '0',
+  //           top: '0'
+  //         }
+  //       } */
+  //     ]
+  //   }
+  // }
 
   // 组件加载后，为每张图片计算其位置的范围
   componentDidMount() {
@@ -184,27 +199,27 @@ let AppComponent = React.createClass({
     let halfImgH = Math.floor(imgH / 2);
 
     //计算中心图片的位置点
-    this.Constant.centerPos = {
+    this.state.constant.centerPos = {
       left: halfStageW - halfImgW,
       top: halfStageH - halfImgH
     }
 
     // 计算左侧、右侧区域图片排布位置的取值范围
-    this.Constant.hPosRange.leftSecX[0] = -halfImgW;
-    this.Constant.hPosRange.leftSecX[1] = halfStageW - halfImgW * 3;
-    this.Constant.hPosRange.rightSecX[0] = halfStageW + halfImgW;
-    this.Constant.hPosRange.rightSecX[1] = stageW - halfImgW;
-    this.Constant.hPosRange.y[0] = -halfImgH;
-    this.Constant.hPosRange.y[1] = stageH - halfImgH;
+    this.state.constant.hPosRange.leftSecX[0] = -halfImgW;
+    this.state.constant.hPosRange.leftSecX[1] = halfStageW - halfImgW * 3;
+    this.state.constant.hPosRange.rightSecX[0] = halfStageW + halfImgW;
+    this.state.constant.hPosRange.rightSecX[1] = stageW - halfImgW;
+    this.state.constant.hPosRange.y[0] = -halfImgH;
+    this.state.constant.hPosRange.y[1] = stageH - halfImgH;
 
     // 计算上侧区域图片排布位置的取值范围
-    this.Constant.vPosRange.topY[0] = -halfImgH;
-    this.Constant.vPosRange.topY[1] = halfStageH - halfImgH * 3;
-    this.Constant.vPosRange.x[0] = halfStageW - imgW;
-    this.Constant.vPosRange.x[1] = halfStageW;
+    this.state.constant.vPosRange.topY[0] = -halfImgH;
+    this.state.constant.vPosRange.topY[1] = halfStageH - halfImgH * 3;
+    this.state.constant.vPosRange.x[0] = halfStageW - imgW;
+    this.state.constant.vPosRange.x[1] = halfStageW;
 
     this.rearrange(0);
-  },
+  }
 
 
 
@@ -243,7 +258,7 @@ let AppComponent = React.createClass({
       </section>
     );
   }
-})
+}
 
 AppComponent.defaultProps = {};
 

@@ -18,7 +18,7 @@
 ```
 npm install -g yo
 
-npm install -g
+npm install -g generator-react-webpack
 
 ```
 ### 项目构建

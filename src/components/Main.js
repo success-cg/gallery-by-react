@@ -4,7 +4,9 @@ require('styles/App.scss');
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-let imageDatas = require('../data/image-datas.js')
+let imageDatas = require('../data/image-datas.js');
+
+let ImgFigure = require('./img-figure.js')
 
 function genImageURL(imageDatasArr) {
   for (var i = 0; i < imageDatasArr.length; i++) {
@@ -33,66 +35,68 @@ function get30DegRandom() {
   return getRangeRandom(-30, 30)
 }
 
-
-class ImgFigure extends React.Component {
-
-  constructor(props){
-    super(props);
-    this.handleClick = this.handleClick.bind(this)
-    // console.log(this);
-}
-
-  /**
-   * ImgFigure 的点击处理函数
-   * @return {[type]} [description]
-   */
-  handleClick(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    this.props.inverse()
-    console.log(this);
-  }
-
-
-
-  render() {
-
-    let styleObj = {}
-
-    //如果props属性中指定了这张图片的位置，则使用
-    if (this.props.arrange.pos) {
-      styleObj = this.props.arrange.pos
-    }
-
-    //如果图片的旋转角度有值并且不为0，添加旋转角度
-    if (this.props.arrange.rotate) {
-      ['Webkit', 'Moz', 'Ms'].forEach((item)=>{
-        styleObj[`${item}Transform`] = `rotate(${this.props.arrange.rotate}deg)`
-      })
-    }
-
-    let imgFigureClassName = 'img-figure';
-    if (this.props.arrange.isInverse) {
-      imgFigureClassName += ' is-inverse'
-    }
-
-    // console.log('this',this);
-
-    return (
-      <figure className={imgFigureClassName} style={styleObj} onClick={this.handleClick}>
-        <img src={this.props.data.imageURL} alt={this.props.data.title}/>
-        <figcaption>
-          <h2 className="img-title">{this.props.data.title}</h2>
-          <div className="img-back" onClick={this.handleClick}>
-            <p>
-              {this.props.data.desc}
-            </p>
-          </div>
-        </figcaption>
-      </figure>
-    );
-  }
-}
+/**
+ * 下面的 ImgFigure 组件用模块化封装了
+ */
+// class ImgFigure extends React.Component {
+//
+//   constructor(props){
+//     super(props);
+//     this.handleClick = this.handleClick.bind(this)
+//     // console.log(this);
+// }
+//
+//   /**
+//    * ImgFigure 的点击处理函数
+//    * @return {[type]} [description]
+//    */
+//   handleClick(e) {
+//     e.stopPropagation();
+//     e.preventDefault();
+//     this.props.inverse()
+//     console.log(this);
+//   }
+//
+//
+//
+//   render() {
+//
+//     let styleObj = {}
+//
+//     //如果props属性中指定了这张图片的位置，则使用
+//     if (this.props.arrange.pos) {
+//       styleObj = this.props.arrange.pos
+//     }
+//
+//     //如果图片的旋转角度有值并且不为0，添加旋转角度
+//     if (this.props.arrange.rotate) {
+//       ['Webkit', 'Moz', 'Ms'].forEach((item)=>{
+//         styleObj[`${item}Transform`] = `rotate(${this.props.arrange.rotate}deg)`
+//       })
+//     }
+//
+//     let imgFigureClassName = 'img-figure';
+//     if (this.props.arrange.isInverse) {
+//       imgFigureClassName += ' is-inverse'
+//     }
+//
+//     // console.log('this',this);
+//
+//     return (
+//       <figure className={imgFigureClassName} style={styleObj} onClick={this.handleClick}>
+//         <img src={this.props.data.imageURL} alt={this.props.data.title}/>
+//         <figcaption>
+//           <h2 className="img-title">{this.props.data.title}</h2>
+//           <div className="img-back" onClick={this.handleClick}>
+//             <p>
+//               {this.props.data.desc}
+//             </p>
+//           </div>
+//         </figcaption>
+//       </figure>
+//     );
+//   }
+// }
 
 /**
  * 以下写法已经随react版本升级而不适用了，虽然能运行，但会有warning
@@ -112,7 +116,7 @@ class ImgFigure extends React.Component {
 
 class AppComponent extends React.Component {
 
-// let AppComponent = React.createClass({
+  // let AppComponent = React.createClass({
 
   /**
    * 翻转图片
@@ -125,13 +129,9 @@ class AppComponent extends React.Component {
     return () => {
       var imgsArrangeArr = this.state.imgsArrangeArr;
       imgsArrangeArr[index].isInverse = !imgsArrangeArr[index].isInverse;
-      this.setState({
-        imgsArrangeArr
-      })
+      this.setState({imgsArrangeArr})
     }
   }
-
-
 
   /**
    * 重新布局所有图片
@@ -163,18 +163,22 @@ class AppComponent extends React.Component {
     //居中的 centerIndex 图片不需要旋转
     imgsArrangeCenterArr[0].rotate = 0
 
+    //居中的图片的isCenter属性设置为true
+    imgsArrangeCenterArr[0].isCenter = true
+
     // 取出要布局上部区域的图片的状态信息
     topImgSpliceIndex = Math.floor(Math.random() * (imgsArrangeArr.length - topImgNum))
     imgsArrangeTopArr = imgsArrangeArr.splice(topImgSpliceIndex, topImgNum)
 
     // 布局位于上侧的图片
-    imgsArrangeTopArr.forEach((item, index)=>{
+    imgsArrangeTopArr.forEach((item, index) => {
       imgsArrangeTopArr[index] = {
         pos: {
           top: getRangeRandom(vPosRangeTopY[0], vPosRangeTopY[1]),
           left: getRangeRandom(vPosRangeX[0], vPosRangeX[1])
         },
-        rotate: get30DegRandom()
+        rotate: get30DegRandom(),
+        isCenter: false
       }
     })
 
@@ -203,26 +207,35 @@ class AppComponent extends React.Component {
       imgsArrangeArr.splice(topImgSpliceIndex, 0, imgsArrangeTopArr[0])
     }
 
-    imgsArrangeArr.splice(centerIndex, 0 , imgsArrangeCenterArr[0])
+    imgsArrangeArr.splice(centerIndex, 0, imgsArrangeCenterArr[0])
 
-    this.setState({
-      imgsArrangeArr
-    })
+    this.setState({imgsArrangeArr})
+  }
+
+  /**
+   * 利用 rearrange 函数，居中对应 index 的图片
+   * @param  {[Number]} 需要被居中的图片的 index 的值
+   * @return {[Function]}  闭包函数
+   */
+  center(index) {
+    return () => {
+      this.rearrange(index)
+    }
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      imgsArrangeArr: [
-        /*{
+      imgsArrangeArr: [/*{
           pos: {
             left: '0',
             top: '0'
           },
           rotate: 0, //旋转角度
-          isInverse: false //图片正反面，false为正面，true为反面
+          isInverse: false, //图片正反面，false为正面，true为反面
+          isCenter: false
         } */
-      ],
+        ],
 
       //constant存储排布的可取值范围
       constant: {
@@ -231,12 +244,18 @@ class AppComponent extends React.Component {
           top: 0
         },
         hPosRange: { //水平方向的取值范围
-          leftSecX: [0, 0],
-          rightSecX: [0, 0],
+          leftSecX: [
+            0, 0
+          ],
+          rightSecX: [
+            0, 0
+          ],
           y: [0, 0]
         },
         vPosRange: { //垂直方向的取值范围
-          x: [0, 0],
+          x: [
+            0, 0
+          ],
           topY: [0, 0]
         }
       }
@@ -296,29 +315,26 @@ class AppComponent extends React.Component {
     this.rearrange(0);
   }
 
-
-
   render() {
 
     let controllerUnits = [];
     let ImgFigures = [];
-    imageDatas.forEach((item, index)=> {
+    imageDatas.forEach((item, index) => {
 
-      if(!this.state.imgsArrangeArr[index]) {
+      if (!this.state.imgsArrangeArr[index]) {
         this.state.imgsArrangeArr[index] = {
           pos: {
             left: 0,
             top: 0
           },
           rotate: 0,
-          isInverse: false
+          isInverse: false,
+          isCenter: false
         }
       }
 
       ImgFigures.push(
-        <ImgFigure data={item} key={`ImgFigure${index}`} ref={`imgFigure${index}`}
-          arrange={this.state.imgsArrangeArr[index]}
-          inverse={this.inverse(index)}></ImgFigure>
+        <ImgFigure data={item} key={`ImgFigure${index}`} ref={`imgFigure${index}`} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}></ImgFigure>
       )
     })
 

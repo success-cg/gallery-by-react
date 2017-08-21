@@ -40,6 +40,11 @@ class ImgFigure extends React.Component {
       })
     }
 
+    //如果图片居中， z-index 设置为11
+    if (this.props.arrange.isCenter) {
+      styleObj.zIndex = 11
+    }
+
     let imgFigureClassName = 'img-figure';
     if (this.props.arrange.isInverse) {
       imgFigureClassName += ' is-inverse'

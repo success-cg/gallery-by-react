@@ -25,6 +25,7 @@ html,body {
   height: 100%;
   overflow: hidden;
   background-color: #ddd;
+  perspective: 1000px;
 
   @at-root {
     //把里面的scss样式解析成css后，提到最外层的根层级中
@@ -41,9 +42,11 @@ html,body {
 
       cursor: pointer;
       transform-style: preserve-3d;
+      transition: all .6s ease-in-out;
+      transform-origin: 0 50% 0;
 
       &.is-inverse {
-        transform: rotateY(180deg);
+        transform: translate(100%, -25%) rotateY(180deg);
       }
 
       img {

@@ -6,7 +6,11 @@ import ReactDOM from 'react-dom';
 
 let imageDatas = require('../data/image-datas.js');
 
-let ImgFigure = require('./img-figure.js')
+// let ImgFigure = require('./img-figure.js') //commonjs方式引入
+import ImgFigure from './img-figure.js';
+
+// let ControllerUnit = require('./controller-unit.js')
+import ControllerUnit from './controller-unit.js'
 
 function genImageURL(imageDatasArr) {
   for (var i = 0; i < imageDatasArr.length; i++) {
@@ -336,18 +340,19 @@ class AppComponent extends React.Component {
       ImgFigures.push(
         <ImgFigure data={item} key={`ImgFigure${index}`} ref={`imgFigure${index}`} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}></ImgFigure>
       )
-    })
+      controllerUnits.push(<ControllerUnit key={index}></ControllerUnit>)
+        })
 
-    // console.log(ImgFigures);
+        // console.log(ImgFigures);
 
-    return (
-      <section className="stage" ref="stage">
-        <section className="img-sec">
-          {ImgFigures}
-        </section>
+        return (
+        <section className="stage" ref="stage">
+          <section className="img-sec">
+            {ImgFigures}
+          </section>
 
-        <nav className="controller-nav">
-          {controllerUnits}
+          <nav className="controller-nav">
+            {controllerUnits}
         </nav>
       </section>
     );

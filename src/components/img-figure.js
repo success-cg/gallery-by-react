@@ -68,4 +68,6 @@ class ImgFigure extends React.Component {
   }
 }
 
-module.exports = ImgFigure
+// module.exports = ImgFigure
+
+export default ImgFigure

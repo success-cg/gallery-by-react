@@ -340,7 +340,7 @@ class AppComponent extends React.Component {
       ImgFigures.push(
         <ImgFigure data={item} key={`ImgFigure${index}`} ref={`imgFigure${index}`} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}></ImgFigure>
       )
-      controllerUnits.push(<ControllerUnit key={index}></ControllerUnit>)
+      controllerUnits.push(<ControllerUnit key={index} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)}></ControllerUnit>)
         })
 
         // console.log(ImgFigures);
